@@ -1,18 +1,10 @@
-function add (a, b) {
-  return a + b
-}
+const add = (a, b) => a + b
 
-function subtract (a, b) {
-  return a - b
-}
+const subtract = (a, b) => a - b
 
-function multiply (a, b) {
-  return a * b
-}
+const multiply = (a, b) => a * b
 
-function divide (a, b) {
-  return a / b
-}
+const divide = (a, b) => a / b
 
 function operate (a, b, operator) {
   switch (operator) {
@@ -24,46 +16,97 @@ function operate (a, b, operator) {
   }
 }
 
+function getFirstNum(e, firstNum) {
+  let array = [];
+  array.push(firstNum);
+  array.push(e.target.textContent);
+  screen.setAttribute("data-display-state", "first-num");
+  return array.join("")
+  }
+
+function getSecondNum(e, secondNum) {
+  let array = [];
+  array.push(secondNum);
+  array.push(e.target.textContent);
+  screen.setAttribute("data-display-state", "second-num");
+  return array.join("")
+}
+
+function getAnswer(e) {
+  let answer = 0;
+  if (firstNum != null && secondNum != null && operator != null) {
+    answer = operate(firstNum, secondNum, operator);
+    firstNum = answer;
+    if (operatorChoices.includes(e.target.textContent) || e.target.textContent == "=") {
+      secondNum = [];
+    }
+    operators.setAttribute("data-operator-state", "1");
+    screen.setAttribute("data-display-state", "answer-num");
+  }
+  return answer
+}
+
+function displayScreen(textToDisplay) {
+  screen.textContent = textToDisplay;
+}
+
 // Variable initialisation
 let firstNum = null;
 let secondNum = null;
 let operator = null;
-let operatorState = 0;
 let operatorChoices = ["+", "-", "x", "/"];
+let answer = 0;
 const calculator = document.querySelector("#calculator");
+const calcBody = calculator.querySelector(".calc-body");
 const screen = calculator.querySelector(".screen");
 const numpad = calculator.querySelector(".numpad");
 const resetBtn = calculator.querySelector(".reset");
 const operators = calculator.querySelector(".operators");
 const equalsBtn = calculator.querySelector(".equals");
 
-// Event listeners
+// ON NUMPAD PRESS
 numpad.addEventListener("click", (e) => {
   if (e.target.textContent >= 0) {
-    screen.textContent == 0 ? screen.textContent = e.target.textContent : screen.textContent += e.target.textContent;
+    operators.getAttribute("data-operator-state") == "0" ? firstNum = getFirstNum(e, firstNum) : secondNum = getSecondNum(e, secondNum);
   }
 });
 
 operators.addEventListener("click", (e) => {
-  if (e.target.textContent != "=") {
-    firstNum = parseInt(screen.textContent);
-    screen.textContent = 0;
-    if (operatorChoices.includes(e.target.textContent)) {
-      operator = e.target.textContent;
-    }
+  if (operatorChoices.includes(e.target.textContent)) {
+      operators.setAttribute("data-operator-state", parseInt(operators.getAttribute("data-operator-state")) + 1);
   }
+
+  if (operators.getAttribute("data-operator-state") == "2") {
+    answer = getAnswer(e);
+  }
+
+  operator = e.target.textContent;
 });
 
+// On RESET BUTTON PRESS
 resetBtn.addEventListener("click", () => {
-  screen.textContent = 0;
   firstNum = null;
   secondNum = null;
   operator = null;
+  operators.setAttribute("data-operator-state", "0");
+  displayScreen(0);
 });
 
-equalsBtn.addEventListener("click", () => {
-  secondNum = parseInt(screen.textContent);
-  if (firstNum != null && secondNum != null && operator != null) {
-    screen.textContent = operate(firstNum, secondNum, operator);
+// ON EQUALS BUTTON PRESS
+equalsBtn.addEventListener("click", (e) => {
+  answer = getAnswer(e);
+  operators.setAttribute("data-operator-state", "0");
+});
+
+// ON CALCULATOR PRESS
+calcBody.addEventListener("click", () => {
+  switch (screen.getAttribute("data-display-state")) {
+  case "first-num": displayScreen(firstNum);
+  break;
+  case "second-num": displayScreen(secondNum);
+  break;
+  case "answer-num": displayScreen(answer);
+  break;
+  default: displayScreen("ERROR");
   }
 });
