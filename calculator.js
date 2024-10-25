@@ -1,4 +1,4 @@
-const add = (a, b) => a + b
+const add = (a, b) => Number(a) + Number(b)
 
 const subtract = (a, b) => a - b
 
@@ -107,6 +107,6 @@ calcBody.addEventListener("click", () => {
   break;
   case "answer-num": displayScreen(answer);
   break;
-  default: displayScreen("ERROR");
+  default: displayScreen("0");
   }
 });
