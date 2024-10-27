@@ -1,7 +1,7 @@
 const add = (a, b) => Number(a) + Number(b)
 
 const subtract = (a, b) => a - b
-
+ 
 const multiply = (a, b) => a * b
 
 const divide = (a, b) => a / b
@@ -50,7 +50,7 @@ function displayScreen(textToDisplay) {
   screen.textContent = textToDisplay;
 }
 
-// Variable initialisation
+// VARIABLE INITIALISATION
 let firstNum = null;
 let secondNum = null;
 let operator = null;
@@ -83,7 +83,7 @@ operators.addEventListener("click", (e) => {
   operator = e.target.textContent;
 });
 
-// On RESET BUTTON PRESS
+// ON RESET BUTTON PRESS
 resetBtn.addEventListener("click", () => {
   firstNum = null;
   secondNum = null;
@@ -95,6 +95,7 @@ resetBtn.addEventListener("click", () => {
 // ON EQUALS BUTTON PRESS
 equalsBtn.addEventListener("click", (e) => {
   answer = getAnswer(e);
+  console.log(typeof answer);
   operators.setAttribute("data-operator-state", "0");
 });
 
